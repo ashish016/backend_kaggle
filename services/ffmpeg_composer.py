@@ -215,27 +215,6 @@ def compose_video(
         amap = "[aout]"
 
     # 3) Final pass: take concat video, mix audio, burn ASS subtitles, scale to 1080x1920.
-    cmd = [
-        "ffmpeg", "-y",
-        *inputs,
-        "-vf", (
-            f"scale={VIDEO_WIDTH}:{VIDEO_HEIGHT}:force_original_aspect_ratio=increase,"
-            f"crop={VIDEO_WIDTH}:{VIDEO_HEIGHT},"
-            f"ass='{subtitle_path.resolve().as_posix()}'"
-        ),
-        "-map", "0:v",
-        "-map", amap,
-        "-c:v", "libx264",
-        "-preset", "medium",
-        "-crf", "20",
-        "-pix_fmt", "yuv420p",
-        "-r", "30",
-        "-c:a", "aac",
-        "-b:a", "192k",
-        "-shortest",
-        str(out_path),
-    ]
-    # The filter graph needs -filter_complex when there are multiple audio inputs
     if background_music_path and Path(background_music_path).exists():
         cmd = [
             "ffmpeg", "-y",
@@ -248,9 +227,35 @@ def compose_video(
             ),
             "-map", "0:v",
             "-map", amap,
-            "-c:v", "libx264", "-preset", "medium", "-crf", "20",
-            "-pix_fmt", "yuv420p", "-r", "30",
-            "-c:a", "aac", "-b:a", "192k",
+            "-c:v", "libx264",
+            "-preset", "medium",
+            "-crf", "20",
+            "-pix_fmt", "yuv420p",
+            "-r", "30",
+            "-c:a", "aac",
+            "-b:a", "192k",
+            "-shortest",
+            str(out_path),
+        ]
+    else:
+        cmd = [
+            "ffmpeg", "-y",
+            "-i", str(concat_video),
+            "-i", str(tts_audio_path),
+            "-vf", (
+                f"scale={VIDEO_WIDTH}:{VIDEO_HEIGHT}:force_original_aspect_ratio=increase,"
+                f"crop={VIDEO_WIDTH}:{VIDEO_HEIGHT},"
+                f"ass='{subtitle_path.resolve().as_posix()}'"
+            ),
+            "-map", "0:v",
+            "-map", "1:a",
+            "-c:v", "libx264",
+            "-preset", "medium",
+            "-crf", "20",
+            "-pix_fmt", "yuv420p",
+            "-r", "30",
+            "-c:a", "aac",
+            "-b:a", "192k",
             "-shortest",
             str(out_path),
         ]
