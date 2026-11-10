@@ -1,0 +1,37 @@
+# --- Core ---
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+pydantic==2.7.4
+python-multipart==0.0.9
+pyngrok==7.1.6
+
+# --- LLM ---
+google-generativeai==0.7.1
+openai==1.35.7
+
+# --- TTS ---
+edge-tts==6.1.12
+pydub==0.25.1
+
+# --- Media fetching ---
+requests==2.32.3
+httpx==0.27.0
+pillow==10.4.0
+
+# --- AI video generation (Kaggle GPU only) ---
+# These are heavy; install on Kaggle where GPU is available.
+# torch>=2.2.0
+# diffusers==0.30.3
+# transformers==4.42.4
+# accelerate==0.31.0
+# imageio==2.34.2
+# imageio-ffmpeg==0.5.1
+
+# --- YouTube upload ---
+google-api-python-client==2.134.0
+google-auth-oauthlib==1.2.0
+google-auth==2.31.0
+
+# --- Utils ---
+python-dotenv==1.0.1
+tqdm==4.66.4
